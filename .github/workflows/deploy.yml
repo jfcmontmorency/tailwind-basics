@@ -15,6 +15,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  mirror_codeberg:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Mirror to Codeberg
+        run: |
+          git remote add codeberg https://${{ secrets.CODEBERG_TOKEN }}@codeberg.org/jfcmontmorency/tailwind-basics.git
+          git push --force --prune codeberg "refs/remotes/origin/*:refs/heads/*" --tags
   build:
     runs-on: ubuntu-latest
     steps:
