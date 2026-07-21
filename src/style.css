@@ -47,7 +47,7 @@
 
 /* Pour un défilement horizontal seamless d'un motif diagonal, la largeur de
    tuile qu'il faut (background-size) n'est PAS la période du dégradé (--d) :
-   c'est d / sin(angle) — la projection d'un déplacement purement horizontal
+   c'est d / sin(angle) - la projection d'un déplacement purement horizontal
    sur l'axe du dégradé doit retomber sur une période entière.
    Source technique : https://stackoverflow.com/a/63791417 (Temani Afif). */
 #preview-box-target{

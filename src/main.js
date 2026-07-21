@@ -40,7 +40,7 @@ let solvedLevels = new Array(levels.length).fill(false);
 // Distinct de "tous les niveaux résolus" (solvedLevels.every) : ne devient
 // true qu'après un clic explicite sur "Terminer" (endGame()). Sert à décider,
 // au refresh, si on doit montrer l'écran de fin ou rester sur le niveau en
-// cours — sinon résoudre le dernier niveau suffirait à afficher l'écran de
+// cours - sinon résoudre le dernier niveau suffirait à afficher l'écran de
 // fin au prochain refresh, même sans avoir cliqué "Terminer".
 let trackFinished = false;
 
@@ -197,9 +197,9 @@ function renderRules(rules) {
 // ===================== NIVEAUX "RESPONSIVE" (vrai <iframe> redimensionnable) =====================
 // Un media query Tailwind (sm:/md:/lg:/xl:) ne réagit qu'à la largeur RÉELLE
 // du viewport. Simuler ça en rejouant le cascade CSS en JS est fragile (voir
-// git history — un premier essai s'est fait piéger par l'ordre interne du CSS
+// git history - un premier essai s'est fait piéger par l'ordre interne du CSS
 // compilé). La solution robuste : un vrai <iframe>, avec son propre viewport,
-// dont on contrôle la largeur — les media queries s'y appliquent alors
+// dont on contrôle la largeur - les media queries s'y appliquent alors
 // nativement, sans aucune logique à réinventer.
 const BREAKPOINT_PX = { sm: 640, md: 768, lg: 1024, xl: 1280 };
 const IFRAME_HEIGHT = 310; // le contenu est zoomé 2x (voir renderResponsiveIframeBox), donc plus haut
@@ -224,7 +224,7 @@ function getPageStylesHtml() {
 
 // Construit le HTML d'une seule boîte : texte simple, ou plusieurs "puces"
 // enfants (niveaux qui montrent un changement de LAYOUT, ex: flex-col →
-// lg:flex-row — un seul élément ne montrerait rien).
+// lg:flex-row - un seul élément ne montrerait rien).
 function buildResponsiveBodyHtml(lvl, classes) {
   if (lvl.children) {
     const chips = lvl.children.map(child => {
@@ -240,7 +240,7 @@ function buildResponsiveBodyHtml(lvl, classes) {
 
 // Cible et version de l'utilisateur sont chacune dans leur PROPRE iframe
 // (empilées dans le HTML, une étiquette au-dessus de chaque), plutôt qu'un
-// seul iframe contenant les deux — plus lisible, et prépare le terrain pour
+// seul iframe contenant les deux - plus lisible, et prépare le terrain pour
 // des niveaux de mise en page où chaque côté a besoin de sa propre largeur.
 function renderResponsiveIframeBox(iframeId, lvl, classes) {
   const iframe = document.getElementById(iframeId);
@@ -290,7 +290,7 @@ function renderResponsivePreview(lvl, targetClasses, userClasses) {
 // Le conteneur ("main") est plus étroit que la largeur max du slider
 // (1300px) : plutôt qu'un scale dynamique qui reste à 1 (taille réelle) puis
 // rétrécit brutalement une fois la largeur de la carte dépassée, on utilise
-// une échelle CONSTANTE (0.5, donc 1300px slider → 650px visuel) — la preview
+// une échelle CONSTANTE (0.5, donc 1300px slider → 650px visuel) - la preview
 // grandit/rétrécit alors de façon fluide et linéaire avec le slider.
 const RESPONSIVE_SCALE = 0.5;
 
@@ -303,7 +303,7 @@ function updateResponsiveScale() {
     if (!iframe) return;
     const wrap = iframe.parentElement;
     // wrap.parentElement (pas wrap lui-même, qu'on redimensionne ici) sert de
-    // référence stable pour la largeur réellement disponible — filet de
+    // référence stable pour la largeur réellement disponible - filet de
     // sécurité si la fenêtre est plus étroite que prévu (mobile).
     const available = wrap.parentElement.clientWidth;
     const scale = Math.min(RESPONSIVE_SCALE, available / width);
