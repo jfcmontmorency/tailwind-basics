@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: docker
+    runs-on: codeberg-tiny
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,8 +26,6 @@ jobs:
       - name: Deploy to Codeberg Pages
         uses: https://codeberg.org/git-pages/action@v2
         with:
-          # Remplacez par l'URL finale de votre site Codeberg
           site: https://jfcmontmorency.codeberg.page/tailwind-basics/
           token: ${{ forgejo.token }}
-          # Le dossier généré par votre commande npm run build (souvent 'dist' ou 'build')
           source: dist/
