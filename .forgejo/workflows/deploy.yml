@@ -27,6 +27,7 @@ jobs:
         uses: https://codeberg.org/git-pages/action@v2
         with:
           # Remplacez par l'URL finale de votre site Codeberg
-          site: https://jfcmontmorency.codeberg.page/tailwind-basics
+          site: https://jfcmontmorency.codeberg.page/tailwind-basics/
+          token: ${{ forgejo.token }}
           # Le dossier généré par votre commande npm run build (souvent 'dist' ou 'build')
-          folder: dist
+          source: dist/
