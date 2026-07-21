@@ -1,0 +1,32 @@
+name: Déployer sur Codeberg Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: docker
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      # Action officielle Codeberg pour déployer le dossier dist sur Codeberg Pages
+      - name: Deploy to Codeberg Pages
+        uses: https://codeberg.org/git-pages/action@v2
+        with:
+          # Remplacez par l'URL finale de votre site Codeberg
+          site: https://jfcmontmorency.codeberg.page/tailwind-basics
+          # Le dossier généré par votre commande npm run build (souvent 'dist' ou 'build')
+          folder: dist
