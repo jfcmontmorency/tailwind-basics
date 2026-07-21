@@ -2,6 +2,8 @@
 
 Un jeu interactif en français pour apprendre **Tailwind CSS 4**. Chaque niveau présente une carte "cible" à reproduire en écrivant les bonnes classes Tailwind.
 
+![](https://github.com/user-attachments/assets/5ba0d13e-c821-4a44-a00b-e8e40dbfbe85")
+
 ## Parcours
 
 Le jeu est découpé en 3 étapes :
