@@ -21,6 +21,8 @@ jobs:
 
       - name: Build static site
         run: npm run build
+        env:
+          VITE_DEPLOY_TARGET: codeberg
 
       # Action officielle Codeberg pour déployer le dossier dist sur Codeberg Pages
       - name: Deploy to Codeberg Pages
