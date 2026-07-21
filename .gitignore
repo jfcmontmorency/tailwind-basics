@@ -1,0 +1,11 @@
+node_modules
+dist
+
+# Éditeurs / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.claude/settings.local.json
+
+# Logs
+npm-debug.log*

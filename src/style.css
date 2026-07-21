@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dracula;
+}
+
+/* Vocabulaire Tailwind qu'un joueur peut raisonnablement essayer en tapant
+   des classes dans le jeu, au-delà de celles littéralement présentes dans le
+   code source (contentClasses/required dans levels-bases.js, déjà détectées
+   automatiquement). Sans ça, une classe jamais écrite dans le code (ex:
+   bg-red-300 au lieu de bg-blue-500) ne serait tout simplement pas générée. */
+@source inline("{bg,text,border}-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{50,{100..900..100},950}");
+@source inline("{bg,text,border}-{white,black}");
+@source inline("{p,px,py,pt,pr,pb,pl,m,mx,my,mt,mr,mb,ml}-{0,0.5,1,1.5,2,2.5,3,3.5,4,5,6,7,8,9,10,11,12,14,16,20,24}");
+@source inline("{m,mx,my,mt,mr,mb,ml}-auto");
+@source inline("text-{xs,sm,base,lg,xl,2xl,3xl,4xl,5xl,6xl}");
+@source inline("font-{thin,extralight,light,normal,medium,semibold,bold,extrabold,black}");
+@source inline("rounded{,-sm,-md,-lg,-xl,-2xl,-3xl,-full,-none}");
+@source inline("border{,-0,-2,-4,-5,-8}");
+@source inline("shadow{,-sm,-md,-lg,-xl,-2xl,-none}");
+@source inline("{gap,gap-x,gap-y}-{0,0.5,1,1.5,2,2.5,3,3.5,4,5,6,7,8,9,10,11,12,14,16,20,24}");
+@source inline("{flex,grid,block,inline-block,inline,inline-flex,inline-grid,hidden}");
+@source inline("flex-{row,row-reverse,col,col-reverse}");
+@source inline("justify-{start,center,end,between,around,evenly}");
+@source inline("items-{start,center,end,stretch,baseline}");
+@source inline("grid-cols-{1..12}");
+/* Variantes préfixées par un breakpoint (étape "Responsive") : un joueur peut
+   tester n'importe quelle combinaison classe/breakpoint, pas seulement celles
+   écrites dans levels-responsive.js. */
+@source inline("{sm:,md:,lg:,xl:,}text-{xs,sm,base,lg,xl,2xl,3xl,4xl,5xl,6xl}");
+@source inline("{sm:,md:,lg:,xl:,}{bg,text,border}-{slate,gray,zinc,neutral,stone,red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,purple,fuchsia,pink,rose}-{50,{100..900..100},950}");
+@source inline("{sm:,md:,lg:,xl:,}{bg,text,border}-{white,black}");
+@source inline("{sm:,md:,lg:,xl:,}{p,px,py,pt,pr,pb,pl,m,mx,my,mt,mr,mb,ml}-{0,0.5,1,1.5,2,2.5,3,3.5,4,5,6,7,8,9,10,11,12,14,16,20,24}");
+@source inline("{sm:,md:,lg:,xl:,}{flex,grid,block,inline-block,inline,inline-flex,inline-grid,hidden}");
+@source inline("{sm:,md:,lg:,xl:,}grid-cols-{1..12}");
+
+/* Animations custom : pas d'équivalent utilitaire Tailwind natif pour des
+   keyframes maison, donc on les déclare ici et on les invoque via les
+   classes utilitaires animate-[...] directement dans le HTML/JS. */
+@keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+@keyframes pop   { 0% { transform: scale(0.94); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fall  { to { transform: translate(var(--drift, 0px), 100vh) rotate(var(--rot, 360deg)); opacity: 0; } }
+
+/* Vague lettre par lettre pour l'indice (showHint() ajoute .wavy à chaque
+   <span> avec un délai croissant). */
+@keyframes wavy { 0% { top: 0; } 50% { top: -4px; } 100% { top: 0; } }
+.wavy { animation: wavy 1.3s ease infinite; position: relative; top: 0; }
+
+/* Pour un défilement horizontal seamless d'un motif diagonal, la largeur de
+   tuile qu'il faut (background-size) n'est PAS la période du dégradé (--d) :
+   c'est d / sin(angle) — la projection d'un déplacement purement horizontal
+   sur l'axe du dégradé doit retomber sur une période entière.
+   Source technique : https://stackoverflow.com/a/63791417 (Temani Afif). */
+#preview-box-target{
+  --stripe-d: 40px;
+  --stripe-angle: 45deg;
+  background-image: repeating-linear-gradient(var(--stripe-angle),
+  color-mix(in srgb, var(--color-base-content) 6%, transparent) 0,
+  color-mix(in srgb, var(--color-base-content) 6%, transparent) calc(var(--stripe-d)/2),
+  color-mix(in srgb, var(--color-base-content) 4%, transparent) calc(var(--stripe-d)/2),
+  color-mix(in srgb, var(--color-base-content) 4%, transparent) var(--stripe-d));
+  background-size: calc(var(--stripe-d) / sin(var(--stripe-angle))) 100%; 
+}
+#preview-box-user {
+  --stripe-d: 40px;
+  --stripe-angle: 45deg;
+  background-image: repeating-linear-gradient(var(--stripe-angle),
+  color-mix(in srgb, var(--color-primary) 6%, transparent) 0,
+  color-mix(in srgb, var(--color-primary) 6%, transparent) calc(var(--stripe-d)/2),
+  color-mix(in srgb, var(--color-primary) 4%, transparent) calc(var(--stripe-d)/2),
+  color-mix(in srgb, var(--color-primary) 4%, transparent) var(--stripe-d));
+  background-size: calc(var(--stripe-d) / sin(var(--stripe-angle))) 100%;
+  animation: bg-scroll 1s linear infinite;
+}
+
+/* Le motif ne bouge que sur la preview live (#preview-box-user), pas sur la
+   cible statique, pour signaler visuellement que c'est la zone "en direct".
+   @keyframes bg-scroll est aussi réutilisée à l'intérieur des iframes
+   "Responsive" (voir renderResponsiveIframeBox dans main.js) : leur CSS est
+   une copie de celui de cette page, donc cette règle leur est accessible. */
+@keyframes bg-scroll {
+  from { background-position: 0 0; }
+  to { background-position: calc(var(--stripe-d) / sin(var(--stripe-angle))) 0; }
+}
+
+
+@custom-variant dark (&:where([data-theme="dracula"], [data-theme="dracula"] *));
