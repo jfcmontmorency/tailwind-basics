@@ -122,32 +122,52 @@ function reviewResults(trackId) {
   renderLevel();
 }
 
-// Reflète, sur la page d'accueil, l'avancement d'une étape donnée.
+// Reflète, sur la page d'accueil, l'avancement d'une étape donnée. Un seul
+// bouton "principal" (btn-primary, tout à droite) dont le texte/action change
+// selon l'état — Commencer / Continuer / Revoir mes réponses — et un bouton
+// "Recommencer" (toujours en outline, jamais primary) qui apparaît dès qu'il
+// y a une progression à effacer, terminée ou non.
 function renderTrackCard(trackId) {
   const btn = document.getElementById(`step-${trackId}-btn`);
   if (!btn) return;
-  const reviewBtn = document.getElementById(`step-${trackId}-review-btn`);
+  const restartBtn = document.getElementById(`step-${trackId}-restart-btn`);
   const badge = document.getElementById(`step-${trackId}-badge`);
   const total = tracks[trackId].levels.length;
   const saved = loadTrackProgress(trackId);
   const solvedCount = saved ? saved.solvedLevels.filter(Boolean).length : 0;
 
+  restartBtn.classList.toggle('hidden', solvedCount === 0);
+
   if (solvedCount === total) {
-    btn.textContent = 'Recommencer ↻';
+    btn.textContent = 'Revoir mes réponses';
+    btn.onclick = () => reviewResults(trackId);
     badge.textContent = '✓';
     badge.className = 'badge badge-success badge-lg';
-    reviewBtn.classList.remove('hidden');
   } else if (solvedCount > 0) {
     btn.textContent = 'Continuer →';
+    btn.onclick = () => startGame(trackId);
     badge.textContent = tracks[trackId].number;
     badge.className = 'badge badge-primary badge-lg';
-    reviewBtn.classList.add('hidden');
   } else {
     btn.textContent = 'Commencer →';
+    btn.onclick = () => startGame(trackId);
     badge.textContent = tracks[trackId].number;
     badge.className = 'badge badge-primary badge-lg';
-    reviewBtn.classList.add('hidden');
   }
+}
+
+// Repart à zéro sur une étape en cours, sans attendre de l'avoir terminée
+// (le bouton principal "Continuer →" ne permet, lui, que de reprendre où on
+// s'est arrêté).
+function restartTrack(trackId) {
+  if (!confirm('Recommencer cette étape à zéro ? Ta progression actuelle sera perdue.')) return;
+  setActiveTrack(trackId);
+  currentLevel = 0;
+  solvedLevels = new Array(levels.length).fill(false);
+  trackFinished = false;
+  document.getElementById('screen-intro').classList.add('hidden');
+  document.getElementById('screen-game').classList.remove('hidden');
+  renderLevel();
 }
 
 function renderHome() {
@@ -654,7 +674,7 @@ renderHome();
 // global : un script de module n'expose rien sur `window` par défaut.
 window.startGame = startGame;
 window.goHome = goHome;
-window.reviewResults = reviewResults;
+window.restartTrack = restartTrack;
 window.prevLevel = prevLevel;
 window.showHint = showHint;
 window.handleAction = handleAction;
